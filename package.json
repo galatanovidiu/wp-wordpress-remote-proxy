@@ -9,7 +9,10 @@
 		"proxy"
 	],
 	"author": "Your Name",
-	"repository": "https://github.com/galatanovidiu/wp-wordpress-remote-proxy",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/galatanovidiu/wp-wordpress-remote-proxy.git"
+	},
 	"type": "module",
 	"files": [
 		"dist",
