@@ -1,9 +1,9 @@
 /**
  * External dependencies
  */
-import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { WordPressRequestParams, WordPressResponse } from './types.js';
+import { log } from './utils.js';
 
 /**
  * WordPress API request function with basic auth support
@@ -11,31 +11,6 @@ import { WordPressRequestParams, WordPressResponse } from './types.js';
  * @param {Object} params - Query parameters for the request
  * @return {Promise<any>} API response as JSON
  */
-const LOG_DIR = process.env.LOG_DIR || path.join(process.cwd(), 'logs');
-const LOG_FILE = process.env.LOG_FILE || path.join(LOG_DIR, 'mcp-proxy.log');
-
-// Ensure log directory exists if logging to file is enabled
-if (process.env.LOG_FILE || process.env.LOG_DIR) {
-  const logDir = path.dirname(LOG_FILE);
-  if (!fs.existsSync(logDir)) {
-    fs.mkdirSync(logDir, { recursive: true });
-  }
-}
-
-function log(message: string) {
-  const timestamp = new Date().toISOString();
-  const logMessage = `${timestamp}: ${message}\n`;
-
-  // Log to file only if LOG_FILE or LOG_DIR is provided
-  if (process.env.LOG_FILE || process.env.LOG_DIR) {
-    fs.appendFileSync(LOG_FILE, logMessage);
-  }
-
-  // Also log to console for development
-  if (process.env.NODE_ENV !== 'production') {
-    console.log(logMessage);
-  }
-}
 
 function validateEnvironment() {
   const requiredEnvVars = ['WP_API_URL', 'WP_API_USERNAME', 'WP_API_PASSWORD'];

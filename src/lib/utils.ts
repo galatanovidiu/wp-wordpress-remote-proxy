@@ -5,15 +5,48 @@ import { createHash } from 'crypto';
 import { createServer } from 'http';
 import { log as consoleLog } from 'console';
 import { WordPressRequestParams, WordPressResponse } from './types.js';
+import * as fs from 'node:fs';
+import * as path from 'node:path';
 
 // Version of the package
 export const MCP_WORDPRESS_REMOTE_VERSION = '1.0.0';
 
+// Logging configuration
+const LOG_DIR = process.env.LOG_DIR || path.join(process.cwd(), 'logs');
+const LOG_FILE = process.env.LOG_FILE || path.join(LOG_DIR, 'mcp-proxy.log');
+
+// Ensure log directory exists if logging to file is enabled
+if (process.env.LOG_FILE || process.env.LOG_DIR) {
+  const logDir = path.dirname(LOG_FILE);
+  if (!fs.existsSync(logDir)) {
+    fs.mkdirSync(logDir, { recursive: true });
+  }
+}
+
 /**
- * Log a message to the console
+ * Log a message to the console and optionally to a file
+ *
+ * @param message - The message to log
+ * @param args - Additional arguments to log
  */
 export function log(message: string, ...args: any[]): void {
-  consoleLog(message, ...args);
+  const timestamp = new Date().toISOString();
+  const formattedArgs =
+    args.length > 0
+      ? args.map(arg => (typeof arg === 'object' ? JSON.stringify(arg) : arg)).join(' ')
+      : '';
+
+  const logMessage = `${timestamp}: ${message}${formattedArgs ? ' ' + formattedArgs : ''}\n`;
+
+  // Log to file only if LOG_FILE or LOG_DIR is provided
+  if (process.env.LOG_FILE || process.env.LOG_DIR) {
+    fs.appendFileSync(LOG_FILE, logMessage);
+  }
+
+  // Also log to console for development
+  if (process.env.NODE_ENV !== 'production') {
+    console.log(logMessage);
+  }
 }
 
 /**

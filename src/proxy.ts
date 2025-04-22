@@ -4,7 +4,7 @@ import { Server } from '@modelcontextprotocol/sdk/server/index.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import { InitializeResult } from './lib/schema/2024-11-05/schema.js';
 import { wpRequest } from './lib/wordpress-api.js';
-import { log } from 'console';
+import { log } from './lib/utils.js';
 import {
   CallToolRequestSchema,
   ListResourcesRequestSchema,
@@ -50,9 +50,9 @@ async function WordPressProxy() {
   );
 
   const withLogging = (schema: string, handler: Function) => async (request: any) => {
-    log(`Received ${schema} request: ${JSON.stringify(request)}`);
+    log(`Received ${schema} request:`, JSON.stringify(request));
     const response = await handler(request);
-    log(`${schema} response: ${JSON.stringify(response)}`);
+    log(`${schema} response:`, JSON.stringify(response));
     return response;
   };
 
@@ -219,10 +219,10 @@ async function WordPressProxy() {
   server
     .connect(transport)
     .then(() => {
-      console.log('MCP server connected to transport successfully');
+      log('MCP server connected to transport successfully');
     })
     .catch(error => {
-      console.error(`Error starting MCP server: ${error}`);
+      log(`Error starting MCP server:`, error);
       process.exit(1);
     });
 }
