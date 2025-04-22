@@ -9,7 +9,7 @@
 		"proxy"
 	],
 	"author": "Your Name",
-	"repository": "https://github.com/yourusername/mcp-wordpress-remote",
+	"repository": "https://github.com/galatanovidiu/wp-wordpress-remote-proxy",
 	"type": "module",
 	"files": [
 		"dist",
@@ -18,7 +18,7 @@
 	],
 	"main": "dist/index.js",
 	"bin": {
-		"mcp-wordpress-remote": "dist/proxy.js"
+		"mcp-wordpress-remote-proxy": "dist/proxy.js"
 	},
 	"scripts": {
 		"build": "tsup",
