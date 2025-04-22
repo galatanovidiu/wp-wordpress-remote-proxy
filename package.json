@@ -1,6 +1,6 @@
 {
 	"name": "mcp-wordpress-remote-proxy",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"description": "MCP WordPress Remote proxy server",
 	"keywords": [
 		"mcp",
@@ -8,7 +8,7 @@
 		"remote",
 		"proxy"
 	],
-	"author": "Your Name",
+	"author": "Ovidiu Iulian Galatan",
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/galatanovidiu/wp-wordpress-remote-proxy.git"
@@ -19,7 +19,7 @@
 		"README.md",
 		"LICENSE"
 	],
-	"main": "dist/index.js",
+	"main": "dist/proxy.js",
 	"bin": {
 		"mcp-wordpress-remote-proxy": "dist/proxy.js"
 	},
