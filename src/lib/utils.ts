@@ -42,11 +42,6 @@ export function log(message: string, ...args: any[]): void {
   if (process.env.LOG_FILE || process.env.LOG_DIR) {
     fs.appendFileSync(LOG_FILE, logMessage);
   }
-
-  // Also log to console for development
-  if (process.env.NODE_ENV !== 'production') {
-    console.log(logMessage);
-  }
 }
 
 /**
