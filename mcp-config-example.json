@@ -1,0 +1,15 @@
+{
+	"mcpServers": {
+		"feature-api": {
+			"command": "npx",
+			"args": [
+				"mcp-wordpress-remote-proxy"
+			],
+			"env": {
+				"WP_API_USERNAME": "USERNAME",
+				"WP_API_PASSWORD": "PASSWORD",
+				"WP_API_URL": "http://WEBSITE.URL"
+			}
+		}
+	}
+}
