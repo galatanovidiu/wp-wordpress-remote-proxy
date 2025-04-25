@@ -42,6 +42,8 @@ Example configuration:
 }
 ```
 
+https://woocommerce.com/document/woocommerce-rest-api/
+
 #### Cursor
 
 The configuration file is located at `~/.cursor/mcp.json`.
