@@ -35,14 +35,26 @@ export async function wpRequest(
   const method = 'POST';
   const baseUrl = process.env.WP_API_URL!;
 
-  // Determine which credentials to use based on the method
+  // Log the request parameters for debugging
+  log(`Request method: ${params.method || 'init'}`);
+  log(`Request args: ${JSON.stringify(params.args || {})}`);
+
+  // Determine which credentials to use based on the method and args
   let username: string;
   let password: string;
 
-  if (params.method && params.method.startsWith('wc_reports_')) {
-    // Use WooCommerce credentials for WooCommerce report methods
+  if (
+    params.method === 'tools/call' &&
+    params.args &&
+    params.args.tool &&
+    params.args.tool.startsWith('wc_reports_')
+  ) {
+    // Use WooCommerce credentials for WooCommerce report tools
     username = process.env.WOO_CUSTOMER_KEY!;
     password = process.env.WOO_CUSTOMER_SECRET!;
+
+    // Log which credentials are being used
+    log(`Using WooCommerce credentials for tool: ${params.args.tool}`);
 
     // Validate WooCommerce credentials
     if (!username || !password) {
@@ -54,13 +66,21 @@ export async function wpRequest(
     // Use standard WordPress credentials for other methods
     username = process.env.WP_API_USERNAME!;
     password = process.env.WP_API_PASSWORD!;
+
+    // Log which credentials are being used
+    log(`Using WordPress credentials for method: ${params.method || 'init'}`);
   }
+
+  // Log credential information (without exposing the actual values)
+  log(`Username length: ${username ? username.length : 0}`);
+  log(`Password length: ${password ? password.length : 0}`);
 
   log(`Environment: ${process.env.NODE_ENV || 'development'}`);
   log(`API URL: ${baseUrl}`);
 
   // Prepare authorization header
   const auth = Buffer.from(`${username}:${password}`).toString('base64');
+  log(`Auth header length: ${auth.length}`);
 
   // Build URL with query params for GET requests
   const url = new URL(`/wp-json/${endpoint}`, baseUrl).toString();
@@ -78,15 +98,20 @@ export async function wpRequest(
   };
 
   try {
+    log(`Sending request to WordPress API...`);
     const response = await fetch(url, fetchOptions);
+    log(`Response status: ${response.status}`);
 
     // Handle error responses
     if (!response.ok) {
       const errorText = await response.text();
+      log(`Error response: ${errorText}`);
       throw new Error(`WordPress API error (${response.status}): ${errorText}`);
     }
 
-    return (await response.json()) as WordPressResponse;
+    const responseData = await response.json();
+    log(`Response received successfully`);
+    return responseData as WordPressResponse;
   } catch (error) {
     log(`Error in wpRequest: ${error instanceof Error ? error.message : String(error)}`);
     throw error;
