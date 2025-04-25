@@ -34,8 +34,27 @@ export async function wpRequest(
   const endpoint = 'wp/v2/wpmcp';
   const method = 'POST';
   const baseUrl = process.env.WP_API_URL!;
-  const username = process.env.WP_API_USERNAME!;
-  const password = process.env.WP_API_PASSWORD!;
+
+  // Determine which credentials to use based on the method
+  let username: string;
+  let password: string;
+
+  if (params.method && params.method.startsWith('wc_reports_')) {
+    // Use WooCommerce credentials for WooCommerce report methods
+    username = process.env.WOO_CUSTOMER_KEY!;
+    password = process.env.WOO_CUSTOMER_SECRET!;
+
+    // Validate WooCommerce credentials
+    if (!username || !password) {
+      throw new Error(
+        'Missing WooCommerce credentials. Please set WOO_CUSTOMER_KEY and WOO_CUSTOMER_SECRET environment variables.'
+      );
+    }
+  } else {
+    // Use standard WordPress credentials for other methods
+    username = process.env.WP_API_USERNAME!;
+    password = process.env.WP_API_PASSWORD!;
+  }
 
   log(`Environment: ${process.env.NODE_ENV || 'development'}`);
   log(`API URL: ${baseUrl}`);
